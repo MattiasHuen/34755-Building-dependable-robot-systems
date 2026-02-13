@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html><head></head><body style="color: rgb(32, 33, 34); font-family: verdana, sans-serif; font-size: 12px;"><h1><span style="color: #990000;">Robobot exercise (34755 week 2)</span></h1>
+<h4><span style="color: #494c4e;">Purpose:</span></h4>
+<p><span style="color: #494c4e;">To get a better understanding of the software on the robot</span></p>
+<h4><span style="color: #494c4e;">Results:</span></h4>
+<p><span style="color: #494c4e;">The results goes to answer the quiz.</span></p>
+<h2><span style="color: #990000;">Python script</span></h2>
+<p><span style="color: #494c4e;">Make sure the battery voltage is above 11.5V or switch to use the 230V power supply (removing the battery and maybe use the charger to recharge the battery)</span></p>
+<ol>
+<li><span style="color: #494c4e;">All in the group connect to the robot using SSH, see how here <a href="https://rsewiki.electro.dtu.dk/index.php?title=Robobot_2">https://rsewiki.electro.dtu.dk/index.php?title=Robobot_2</a>&nbsp;<br>The username and password are in the week 1 description (in Learn).<br></span></li>
+<li><span style="color: #494c4e;">Go to the directory with the Python script<br><strong><span style="font-family: 'courier new', courier, sans-serif;">cd svn/robobot/mqtt_python</span></strong><br><strong><span style="font-family: 'courier new', courier, sans-serif;">ls -l<br></span></strong></span><span style="color: #494c4e;">The file&nbsp;<span style="font-family: 'courier new', courier, sans-serif;"><strong>mqtt-client.py</strong></span> is the main file.&nbsp; This file may be green, which indicates that it is executable.</span></li>
+<li><span style="color: #494c4e;">Run this file with a help option.<br><strong><span style="font-family: 'courier new', courier, sans-serif;">./mqtt-client.py --help</span></strong><br>If this is refused (the file was not green), then run:</span><span style="color: #494c4e;"><br><span style="font-family: 'courier new', courier, sans-serif;"><strong>python3 mqtt-client.py --help</strong></span></span></li>
+<li><span style="color: #494c4e;">Make the robot run 1m using the <em><strong>--meter</strong></em> option.<br><strong><span style="font-family: 'courier new', courier, sans-serif;">./mqtt-client.py --meter</span></strong> <br>What happens if two people run the script at (almost) the same time?</span></li>
+</ol>
+<h2><span style="color: #990000;">Mirror disk</span></h2>
+<p>Turn on the robot and mirror the Raspberry Pi disk to your PC.<br>All can do this at the same time.</p>
+<h4>Windows</h4>
+<ul>
+<li>Install <em><strong>WinSCP </strong></em>(if not already installed)<strong></strong><em><strong>.&nbsp;<br></strong></em>Open WinSCP.</li>
+<li>In "Tabs" open "New Tab"
+<ul>
+<li>Click on "new site"</li>
+<li>In hostname, insert the robot IP (like: 10.197.218.32)</li>
+<li>Insert username and password (local, grenen)</li>
+<li>Press "save", the Folder can be left as is (&lt;none&gt;) and allow it to save the password.</li>
+</ul>
+</li>
+<li>Press "Connect" and accept the connection to an unknown server.</li>
+<li>The Raspberry Pi disk is now visible.</li>
+</ul>
+<h4>Linux</h4>
+<ul>
+<li>Make an empty directory (or reuse an existing empty directory):<br><em><strong>mkdir aaa</strong></em></li>
+<li>Mirror disk (replace IP with your robot IP):<br><em><strong>sshfs <a href="mailto:local@10.197.218.32">local@10.197.218.32</a>: aaa<br></strong></em>Remember the '<strong>:</strong>' at the end of the IP</li>
+<li>The Raspberry Pi disk is now available in the directory:<br><em><strong>cd aaa</strong></em><br><em><strong>ls</strong></em></li>
+</ul>
+<h4><strong>Mac</strong></h4>
+<ul>
+<li>You are on your own.<strong> </strong></li>
+</ul>
+<p>Navigate to the svn/robobot/mqtt_python directory for the next part.</p>
+<h2><span style="color: #990000;">Python logfile</span></h2>
+<p><span style="color: #494c4e;">Connect to the robot with SSH.</span></p>
+<ol>
+<li><span style="color: #494c4e;">Run the mqtt-client.py without options from an SSH connection to the robot.<br><strong><span style="font-family: 'courier new', courier, sans-serif;">./mqtt-client.py</span></strong></span></li>
+<li><span style="color: #494c4e;"></span>On your PC, open the file<em><strong> logfile.txt</strong></em> in the <em><strong>svn/robobot/mqtt_python</strong></em> directory.<br>Hint: Save the file somewhere else on your PC, so that there is no conflict if more people save to the Raspberry Pi disk.</li>
+<li>Some lines start with a '%', and some start with a timestamp in seconds (e.g., 1770729957.8731084).<br>Remove the first group starting with timestamps until a line that ends with the text 'enc0'. This MQTT message tells the Teensy to clear the encoder data, e.g., reset the position.<br>Save the file (not to the Raspberry Pi)</li>
+<li>Start MATLAB and go to the directory with the file.</li>
+<li>Run this MATLAB script to show how the robot thinks it is moving.<br><span style="color: #008835; font-family: 'courier new', courier, sans-serif;">close all</span><br><span style="color: #008835; font-family: 'courier new', courier, sans-serif;">clear</span><br><span style="color: #008835; font-family: 'courier new', courier, sans-serif;">%% open Python logfile</span><br><span style="color: #008835; font-family: 'courier new', courier, sans-serif;">aaa = load('logfile.txt');</span><br><span style="color: #008835; font-family: 'courier new', courier, sans-serif;">%% plot the X-Y position</span><br><span style="color: #008835; font-family: 'courier new', courier, sans-serif;">h = figure(100);</span><br><span style="color: #008835; font-family: 'courier new', courier, sans-serif;">hold off</span><br><span style="color: #008835; font-family: 'courier new', courier, sans-serif;">plot(aaa(:,3), aaa(:,4))</span><br><span style="color: #008835; font-family: 'courier new', courier, sans-serif;">grid on</span><br><span style="color: #008835; font-family: 'courier new', courier, sans-serif;">axis equal</span></li>
+<li>Did the robot actually move like this?</li>
+<li>Which of the Python files wrote this file?</li>
+</ol>
+<h2><span style="color: #990000;">Teensy interface logfile</span></h2>
+<p>The teensy interface also creates logfiles (by default).</p>
+<p>Mirror the Raspberry Pi disk to your local PC.</p>
+<p>Open an SSH connection to the robot.</p>
+<ol>
+<li>Kill the 'teensy_interface' process to close the log files.<br><span style="font-family: 'courier new', courier, sans-serif;"><em><strong>pkill teensy_interfac</strong></em></span><br>Note: the process name is too long, so the last 'e' in 'teensy_interface' is missing.<br><br></li>
+<li>On your PC, navigate to the Raspberry Pi directory svn/robobot/teensy/interface/build.</li>
+<li>Here you will meet some timestamped directories, e.g.:<br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">~/aaa/svn/robobot/teensy_interface/build$ ls</span><br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">CMakeCache.txt &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; log_20260202_205635.536 &nbsp;out_console.txt</span><br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">CMakeFiles &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; log_20260203_090355.973 &nbsp;out_err.txt</span><br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">cmake_install.cmake &nbsp; &nbsp; &nbsp;log_20260210_100758.276 &nbsp;robot.ini</span><br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">log_20260202_183043.086 &nbsp;log_20260210_101230.979 &nbsp;teensy_interface</span><br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">log_20260202_205530.882 &nbsp;Makefile</span></li>
+<li>Go into the newest directory, here <span style="font-family: 'courier new', courier, sans-serif; color: #008835;">log_20260210_101230.979</span>&nbsp;<br>List the files, e.g. (Linux style):<br><span style="color: #008835;">~/aaa/svn/robobot/teensy_interface/build/log_20260210_101230.979$ ls -l</span><br><span style="color: #008835;">totalt 3076</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; &nbsp; 334 Feb 10 12:37 log_joy_drive.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; &nbsp;2498 Feb 10 14:26 log_mixer.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; &nbsp;7493 Feb 10 14:26 log_mqtt_in.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr 1566909 Feb 10 14:26 log_mqtt.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; &nbsp;1817 Feb 10 14:26 log_service.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; 62569 Feb 10 14:26 log_t0_acc_1.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; 27603 Feb 10 14:26 log_t0_dist.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; 93380 Feb 10 14:26 log_t0_edge_livn.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; 17303 Feb 10 14:26 log_t0_edge_liv.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; &nbsp; 204 Feb 10 12:37 log_t0_encoder.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; 99199 Feb 10 14:26 log_t0_encoder_velocity.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; 64589 Feb 10 14:26 log_t0_gyro_1.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; &nbsp;2872 Feb 10 14:26 log_t0_hbt.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp;174489 Feb 10 14:26 log_t0_pose.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; &nbsp; 122 Feb 10 12:37 log_t0_servo.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp;989558 Feb 10 14:26 log_t0_teensy_io.txt</span><br><span style="color: #008835;">-rw-rw-r-- 1 chr chr &nbsp; &nbsp;2539 Feb 10 10:12 robot.ini</span><br>One of the files is called log_t0_pose.txt; open it on your PC.</li>
+<li>Open MATLAB and plot the x-y position, e.g.:<br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">bb = load("log_t0_pose.txt");</span><br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">figure(200);</span><br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">plot(bb(:,2), bb(:,3))</span><br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">axis equal. <br><span style="font-family: verdana, sans-serif; color: #494c4e;">The teensy_interface has been running continuously, so if you have been running the Python script multiple times, you should be able to see how consistent the robot is in performing a manoeuvre.</span></span></li>
+<li>What is the time interval between updates in this file?</li>
+<li>In the same directory, there is a copy of the 'robot.ini' file that the 'teensy_interface' used.<br>Open the robot.ini file and find the group '<em><strong>[encoder0]</strong></em>'.<br>Does the 'interval_pose_ms' match what was found in the previous question?</li>
+<li>Plot the heading as a function of time. Heading is column 4 in the pose, like:<br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">figure(201);</span><br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">plot(bb(:,1) - bb(1,1), bb(:,4), 'x')</span><br><span style="font-family: 'courier new', courier, sans-serif; color: #008835;">grid on</span><br>Column 1 is the timestamp, and the first timestamp <span style="font-family: 'courier new', courier, sans-serif; color: #008835;">bb(1,1)</span> is subtracted to get a decent x-scale.<br>It should be visible, then the period(s) with data is shorter than the period the 'teensy_interface' has been running. Why?</li>
+<li>Restart teensy_interface in the SSH connection to the robot:<br>cd ~/svn/robobot/teensy_interface/build<br>./teensy_interface -l<br>The '-l' (minus L) disables logging from the start.</li>
+</ol>
+<h2><span style="color: #990000;">Servo disable</span></h2>
+<p>After a mission, the servo will often remain active, producing an irritating tone. The tone is the interval at which the servo corrects position errors.</p>
+<p>We will try to make the servo move and disable it using an MQTT message. The MQTT server is called Mosquitto.</p>
+<ol>
+<li>Press the servo arm to hear the tone or to stop it.</li>
+<li>In an SSH connection to the robot, issue the command (replace the IP with the robot's IP, or use 'localhost'.<br><span style="color: #008835;"><strong>mosquitto_pub -h 192.168.2.119 -t robobot/cmd/T0 -m "servo 1 -900 0"</strong></span><br>The servo should now move up to position '-900', close to the maximum.<br>The limit is approximately +/- 1000.</li>
+<li>The servo is disabled if the value is outside the valid area. Try:<br><span style="color: #008835;"><strong>mosquitto_pub -h 192.168.2.119 -t robobot/cmd/T0 -m "servo 1 3000 0"<br></strong></span>The last value in the <span style="color: #008835;"><strong>-m "servo 1 3000 0"</strong></span> message is the servo speed. 0 gives full speed. A positive value (1-1000) is the number of position values moved in one second, i.e. 20 is slow, and 500 is OK fast.</li>
+<li>The parameters to the command are '-h' for host name (IP), the '-t' is the topic, and the '-m' is the message.</li>
+<li>The servo should now be relaxed (can be moved by hand).</li>
+<li>See the Python script to find examples to send servo messages to the robot.</li>
+<li>See the list of commands the Teensy understands in <a href="https://rsewiki.electro.dtu.dk/index.php?title=Help_page_Teensy_8">https://rsewiki.electro.dtu.dk/index.php?title=Help_page_Teensy_8</a> .</li>
+</ol>
+<p></p>
+<p><span style="color: #494c4e;"></span></p>
+<p><span style="color: #494c4e;"></span></p></body></html>
